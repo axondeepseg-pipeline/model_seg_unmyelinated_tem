@@ -96,7 +96,7 @@ def main(csv_dir: Path, segmented_dir: Path):
 
 if __name__ == '__main__':
     ap = argparse.ArgumentParser(description='Match manually measured axon coordinates to segmented axons.')
-    ap.add_argument('csv_dir', type=Path, help='Directory containing CSV file for every image.')
+    ap.add_argument('csv_dir', type=Path, help='Directory containing CSV files (manual measurements) for every image.')
     ap.add_argument('segmented_dir', type=Path, help='Directory containing segmented images.')
     args = ap.parse_args().csv_dir, ap.parse_args().segmented_dir
     csv_dir, segmented_dir = args

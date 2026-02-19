@@ -4,6 +4,7 @@ The scripts in this section are used to compare manual measurements (myelin thic
 To use these scripts, please use an `AxonDeepSeg` virtual environment.
 
 ![show_img](366A_slot_A2_8000x_ROI-1_stitched_8bit_eq_resized_COORDS_EXAMPLE.png)
+In the above figure, manual measurements of myelin thickness are displayed with red dots (representing the centerpoint of the straight-line measurement). `AxonDeepSeg`, on the other hand, will estimate the myelin thickness based on the area of the segmented myelin (displayed in green).
 
 ## Run the pipeline
 First, make sure you have activated a virtual environment with `AxonDeepSeg` installed.
@@ -31,7 +32,13 @@ segmented_dir/
 python match_axons.py csv_dir segmented_dir
 ```
 
-Then, to visualize the comparison between automatic and manual measurements (for every individual images and globally), use this script:
+Note that you can aggregate all matched measurements into a single CSV file using 
+
+```bash
+python aggregate_auto_measurements.py csv_dir
+```
+
+Then, to visualize the comparison between automatic and manual measurements (for every individual image and globally), use this script:
 
 ```bash
 python plot_comparisons.py csv_dir
