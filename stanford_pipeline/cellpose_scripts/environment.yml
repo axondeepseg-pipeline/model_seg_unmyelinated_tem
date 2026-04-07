@@ -6,3 +6,4 @@ dependencies:
   - pip:
     - cellpose>4.0.0
     - scikit-image
+    - matplotlib
