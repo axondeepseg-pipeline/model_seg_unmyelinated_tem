@@ -1,0 +1,20 @@
+# cellpose pipeline
+
+First, you can setup a dedicated conda environment. Inside the current directory, 
+use:
+```
+conda env create -f environment.yml
+```
+
+## Data
+The data we use for finetuning is the Stanford SRF dataset, available here: 
+https://doi.org/10.48324/dandi.001350/0.250511.1527
+
+## Preprocess the data
+The data is originally in BIDS format. Using the following script, we can 
+preprocess the data by organizing it in a convenient format for the cellpose pipeline:
+```
+python prepare_data <BIDS_ROOT> -t myelinated -o <OUTPUT_PATH>
+```
+Here, `BIDS_ROOT` is the path to the dataset, and the `-t` option lets you specify 
+the target class, either `myelinated` or `unmyelinated`.
