@@ -22,15 +22,13 @@ def main(data_dir: Path, output_dir: Path):
 
     label_files = [str(f) for f in data_dir.glob(f'*{CELLPOSE_MASK_SUFFIX}')]
     image_files = [f.replace(CELLPOSE_MASK_SUFFIX, '.png') for f in label_files]
-    print(image_files)
-    print(label_files)
 
     model = models.CellposeModel(gpu=True, pretrained_model="cpsam")
 
     new_model_path = train.train_seg(
         model.net,
-        train_files=train_imgs,
-        train_labels_files=train_masks,
+        train_files=image_files,
+        train_labels_files=label_files,
         normalize=True,
         n_epochs=500,
         learning_rate=1e-4,  
