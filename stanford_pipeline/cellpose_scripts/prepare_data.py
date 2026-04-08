@@ -57,15 +57,15 @@ def find_image_mask_pairs_from_bids(dir_path: Path, mask_suffix: str = '_seg-axo
     - List of tuples containing (image_path, mask_path).
     """
     image_mask_pairs = []
-    mask_files = list(dir_path.glob(f'derivatives/labels/sub-*/micr/*{mask_suffix}'))
+    mask_files = list(dir_path.glob(f'derivatives/labels/sub-*/micr/*{mask_suffix}.png'))
     for mask_file in mask_files:
-        image_filename = mask_file.name.replace(mask_suffix, '.png')
+        image_filename = mask_file.name.replace(mask_suffix, '')
         image_file = list(dir_path.glob(f'sub-*/micr/{image_filename}'))[0]
         if image_file.exists():
             image_mask_pairs.append((image_file, mask_file))
         else: 
             # in case images are in TIFF format instead of PNG
-            image_file_tiff = mask_file.with_name(mask_file.name.replace(mask_suffix, '.tif'))
+            image_file_tiff = mask_file.with_name(mask_file.name.replace('.png', '.tif'))
             if image_file_tiff.exists():
                 image_mask_pairs.append((image_file_tiff, mask_file))
             else:
