@@ -12,7 +12,7 @@ from PIL import Image
 from skimage import measure
 import numpy as np
 
-CELLPOSE_MASK_SUFFIX = '_seg-cellpose.png'
+CELLPOSE_MASK_SUFFIX = '_seg-cellpose'
 
 def convert_axonmyelin_mask_to_cellpose(mask_path: Path, output_path: Path):
     """
@@ -74,13 +74,13 @@ def find_image_mask_pairs_from_bids(dir_path: Path, mask_suffix: str = '_seg-axo
 
 def preprocess_dataset(data_dir: Path, output_dir: Path, target_class: str = 'myelinated'):
     
-    suffix = '_seg-axonmyelin-manual.png' if target_class == 'myelinated' else '_seg-uaxon-manual.png'
-    train_data = find_image_mask_pairs_from_bids(data_dir, suffix)
+    suffix = '_seg-axonmyelin-manual' if target_class == 'myelinated' else '_seg-uaxon-manual'
+    pairs = find_image_mask_pairs_from_bids(data_dir, suffix)
 
     output_dir = output_dir / target_class
     output_dir.mkdir(parents=True, exist_ok=True)
     
-    for image_path, mask_path in train_data:
+    for image_path, mask_path in pairs:
         output_image_path = output_dir / image_path.name
         output_mask_path = output_dir / (mask_path.name.replace(suffix, CELLPOSE_MASK_SUFFIX))
 
@@ -90,13 +90,17 @@ def preprocess_dataset(data_dir: Path, output_dir: Path, target_class: str = 'my
 if __name__ == '__main__':
     ap = argparse.ArgumentParser(description="Preprocess dataset for Cellpose")
     ap.add_argument('data_dir', type=str, help="Path to the dataset (split into train/ and test/ directories)")
-    ap.add_argument('-t', '--target-class', type=str, default='myelinated', help="Type of mask to process. Either 'myelinated' or 'unmyelinated'.")
+    ap.add_argument('-t', '--target-class', type=str, default=None, help="Type of mask to process. Either 'myelinated' or 'unmyelinated'. Defaults to both.")
     ap.add_argument('-o', '--output_dir', type=str, default=None, help="Path to save the preprocessed data.")
     args = ap.parse_args()
     data_dir = Path(args.data_dir)
-    target_class = args.target_class.lower()
-    if target_class not in ['myelinated', 'unmyelinated']:
-        raise ValueError("Invalid target class. Must be either 'myelinated' or 'unmyelinated'.")
+    target_class = args.target_class
     output_dir = Path(args.output_dir) if args.output_dir else Path('.') / 'cellpose_preprocessed'
-    
-    preprocess_dataset(data_dir, output_dir, target_class)
+
+    if target_class is None:
+        for cls in ['myelinated', 'unmyelinated']:
+            preprocess_dataset(data_dir, output_dir, cls)
+    elif target_class not in ['myelinated', 'unmyelinated']:
+        raise ValueError("Invalid target class. Must be either 'myelinated' or 'unmyelinated'.")
+    else:
+        preprocess_dataset(data_dir, output_dir, target_class)

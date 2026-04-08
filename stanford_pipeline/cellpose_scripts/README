@@ -4,17 +4,23 @@ First, you can setup a dedicated conda environment. Inside the current directory
 use:
 ```
 conda env create -f environment.yml
+conda activate ads-cellpose
 ```
 
 ## Data
 The data we use for finetuning is the Stanford SRF dataset, available here: 
 https://doi.org/10.48324/dandi.001350/0.250511.1527
 
+The SRF testing set is available on github: https://github.com/axondeepseg/data_axondeepseg_srf_testing/archive/refs/tags/r20250513-neurips2025.zip
+
 ## Preprocess the data
 The data is originally in BIDS format. Using the following script, we can 
-preprocess the data by organizing it in a convenient format for the cellpose pipeline:
+preprocess the data by organizing it in a convenient format for the cellpose pipeline.
+You should preprocess both the training and testing sets, like so:
 ```
-python prepare_data <BIDS_ROOT> -t myelinated -o <OUTPUT_PATH>
+python prepare_data <SRF_TRAIN_SET> -o cellpose_preprocessed/train
+python prepare_data <SRF_TEST_SET> -o cellpose_preprocessed/test
 ```
-Here, `BIDS_ROOT` is the path to the dataset, and the `-t` option lets you specify 
-the target class, either `myelinated` or `unmyelinated`.
+By default, this will create 4 sets of image-mask pairs: for both the training 
+and testing sets, there will be separate sets for myelinated and unmyelinated 
+axons.
