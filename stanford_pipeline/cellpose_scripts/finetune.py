@@ -54,7 +54,7 @@ def main(data_dir: Path, test_dir: Path, output_dir: Path):
     handler.setFormatter(formatter)
     internal_logger.addHandler(handler)
 
-    new_model_path = train.train_seg(
+    new_model_path, train_losses, test_losses = train.train_seg(
         model.net,
         train_files=image_files,
         train_labels_files=label_files,
