@@ -11,6 +11,7 @@ from pathlib import Path
 from PIL import Image
 from skimage import measure  
 from cellpose import models, train, metrics
+import logging
 
 
 CELLPOSE_MASK_SUFFIX = '_seg-cellpose.png'
@@ -45,6 +46,13 @@ def main(data_dir: Path, test_dir: Path, output_dir: Path):
     test_image_files, test_label_files = load_image_mask_pairs(test_dir)
 
     model = models.CellposeModel(gpu=True, pretrained_model="cpsam")
+
+    internal_logger = logging.getLogger(train.__name__)
+    internal_logger.setLevel(logging.INFO)
+    handler = logging.StreamHandler()
+    formatter = logging.Formatter('%(name)s: %(message)s')
+    handler.setFormatter(formatter)
+    internal_logger.addHandler(handler)
 
     new_model_path = train.train_seg(
         model.net,
