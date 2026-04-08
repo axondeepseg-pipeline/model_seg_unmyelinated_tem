@@ -18,9 +18,16 @@ The data is originally in BIDS format. Using the following script, we can
 preprocess the data by organizing it in a convenient format for the cellpose pipeline.
 You should preprocess both the training and testing sets, like so:
 ```
-python prepare_data <SRF_TRAIN_SET> -o cellpose_preprocessed/train
-python prepare_data <SRF_TEST_SET> -o cellpose_preprocessed/test
+python prepare_data <SRF_TRAIN_SET> -o preprocessed/train
+python prepare_data <SRF_TEST_SET> -o preprocessed/test
 ```
 By default, this will create 4 sets of image-mask pairs: for both the training 
 and testing sets, there will be separate sets for myelinated and unmyelinated 
 axons.
+
+## Finetune cellpose-SAM
+Then, you can finetune the models. Usage: `finetune.py [-h] data_dir test_dir output_dir`.
+For example, you could finetune cellpose-SAM to detect unmyelinated axons:
+```
+python finetune.py preprocessed/train/unmyelinated preprocessed/test/unmyelinated finetuned_unmyelinated
+```

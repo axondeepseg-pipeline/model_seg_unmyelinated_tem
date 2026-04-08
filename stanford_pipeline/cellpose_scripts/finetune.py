@@ -1,3 +1,9 @@
+"""
+Fine-tune a Cellpose model on the Stanford SRF dataset.
+
+
+Authors: Pauline Goue, Armand Collin
+"""
 import argparse
 import numpy as np
 import matplotlib.pyplot as plt
@@ -10,7 +16,21 @@ from cellpose import models, train, metrics
 CELLPOSE_MASK_SUFFIX = '_seg-cellpose.png'
 
 
-def main(data_dir: Path, output_dir: Path):
+def load_image_mask_pairs(data_dir: Path) -> tuple[list[str], list[str]]:
+    """
+    Load image and corresponding mask file paths from the specified directory.
+
+    Parameters:
+    - data_dir: Path to the directory containing the preprocessed images and masks.
+
+    Returns:
+    - A tuple containing two lists: (image_files, mask_files)
+    """
+    mask_files = [str(f) for f in data_dir.glob(f'*{CELLPOSE_MASK_SUFFIX}')]
+    image_files = [f.replace(CELLPOSE_MASK_SUFFIX, '.png') for f in mask_files]
+    return image_files, mask_files
+
+def main(data_dir: Path, test_dir: Path, output_dir: Path):
     """
     Main function to fine-tune a Cellpose model on the provided dataset.
 
@@ -20,8 +40,9 @@ def main(data_dir: Path, output_dir: Path):
     """
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    label_files = [str(f) for f in data_dir.glob(f'*{CELLPOSE_MASK_SUFFIX}')]
-    image_files = [f.replace(CELLPOSE_MASK_SUFFIX, '.png') for f in label_files]
+    target_class = 'unmyelinated' if 'unmyelinated' in data_dir.name else 'myelinated'
+    image_files, label_files = load_image_mask_pairs(data_dir)
+    test_image_files, test_label_files = load_image_mask_pairs(test_dir)
 
     model = models.CellposeModel(gpu=True, pretrained_model="cpsam")
 
@@ -29,12 +50,16 @@ def main(data_dir: Path, output_dir: Path):
         model.net,
         train_files=image_files,
         train_labels_files=label_files,
+        test_files=test_image_files,
+        test_labels_files=test_label_files,
         normalize=True,
         n_epochs=500,
         learning_rate=1e-4,  
         save_path=str(output_dir),
-        save_every=25,
+        save_every=50,
+        model_name=f"cpsam_finetuned_{target_class}"
     )
+    print(f"Fine-tuned model saved at: {new_model_path}")
 
     # skip eval for now
 
@@ -63,9 +88,10 @@ def main(data_dir: Path, output_dir: Path):
     # plt.savefig(str(output_dir / "eval_grid.png"), dpi=150)
 
 if __name__ == "__main__":
-    ap = argparse.ArgumentParser(description="Fine-tune Cellpose model on custom dataset")
-    ap.add_argument('data_dir', type=str, help="Path to the preprocessed dataset (output of prepare_data.py)")
+    ap = argparse.ArgumentParser(description="Fine-tune Cellpose model on axon dataset")
+    ap.add_argument('data_dir', type=str, help="Path to the preprocessed training set (output of prepare_data.py)")
+    ap.add_argument('test_dir', type=str, help="Path to the preprocessed testing set (output of prepare_data.py).")
     ap.add_argument('output_dir', type=str, help="Path to save the fine-tuned model and evaluation results")
     args = ap.parse_args()
 
-    main(Path(args.data_dir), Path(args.output_dir))
+    main(Path(args.data_dir), Path(args.test_dir), Path(args.output_dir))
