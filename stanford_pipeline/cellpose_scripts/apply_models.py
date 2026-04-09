@@ -9,7 +9,24 @@ import numpy as np
 import argparse
 import logging
 import torch
+import cv2
 
+
+def visualize_instance_seg(mask: np.ndarray) -> np.ndarray:
+    """
+    Convert an instance segmentation mask (where each instance has a unique integer label) 
+    into an RGB image where each instance is colored differently.
+
+    Parameters:
+    - mask: 2D numpy array of shape (H, W) with integer labels for each instance.
+
+    Returns:
+    - A 3D numpy array of shape (H, W, 3) representing the RGB image.
+    """
+    img_normalized = cv2.normalize(mask, None, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX).astype(np.uint8)
+    rgb_image = cv2.applyColorMap(img_normalized, cv2.COLORMAP_SPRING)
+    rgb_image[mask == 0] = [0, 0, 0]  # Set background to black
+    return rgb_image
 
 def main(model_dir: Path, input_dir: Path):
     finetuned = {
@@ -37,8 +54,14 @@ def main(model_dir: Path, input_dir: Path):
         for img_path in image_paths:
             img = io.imread(str(img_path))
             masks, _, _ = model.eval(img)
+            
+            # transform instance segmentation mask into something we can visualize in RGB (each instance gets a unique color)
+            print(f'Creating visuals of {target_class} predictions for {img_path.name}...')
+            rgb_mask = visualize_instance_seg(masks)
             output_mask_path = input_dir / f'{img_path.stem}_pred-{target_class}.png'
+
             io.imsave(str(output_mask_path), masks.astype(np.uint16))
+            io.imsave(str(input_dir / f'{img_path.stem}_pred-{target_class}_rgb.png'), rgb_mask)
         del model
 
 
