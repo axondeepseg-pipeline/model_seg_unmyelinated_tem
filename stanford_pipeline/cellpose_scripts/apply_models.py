@@ -24,7 +24,7 @@ def visualize_instance_seg(mask: np.ndarray) -> np.ndarray:
     - A 3D numpy array of shape (H, W, 3) representing the RGB image.
     """
     img_normalized = cv2.normalize(mask, None, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX).astype(np.uint8)
-    rgb_image = cv2.applyColorMap(img_normalized, cv2.COLORMAP_SPRING)
+    rgb_image = cv2.applyColorMap(img_normalized, cv2.COLORMAP_JET)
     rgb_image[mask == 0] = [0, 0, 0]  # Set background to black
     return rgb_image
 
