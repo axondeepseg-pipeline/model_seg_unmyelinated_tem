@@ -20,6 +20,7 @@ def main(model_dir: Path, input_dir: Path):
     m = torch.load(finetuned['myelinated'], map_location='cpu')
     myelinated_diam_labels = m['diam_labels']
     del m
+    print('Diameter parameter for myelinated axon model:', myelinated_diam_labels.item())
 
     internal_logger = logging.getLogger(models.__name__)
     internal_logger.setLevel(logging.INFO)
@@ -28,19 +29,18 @@ def main(model_dir: Path, input_dir: Path):
     handler.setFormatter(formatter)
     internal_logger.addHandler(handler)
 
+    image_paths = list(input_dir.glob('*.png'))
     # process folder one model at a time to avoid loading both on gpu at once
     for target_class, model_path in finetuned.items():
         print(f'Applying {target_class} model...')
         model = models.CellposeModel(gpu=True, pretrained_model=str(model_path))
-        for img_path in input_dir.glob('*.png'):
+        for img_path in image_paths:
             img = io.imread(str(img_path))
-            diam = myelinated_diam_labels if target_class == 'myelinated' else None
-            masks, _, _ = model.eval(img, diameter=diam)
-            print(model.net['diam_labels'])
+            masks, _, _ = model.eval(img)
             output_mask_path = input_dir / f'{img_path.stem}_pred-{target_class}.png'
             io.imsave(str(output_mask_path), masks.astype(np.uint16))
         del model
-    
+
 
 if __name__ == '__main__':
     ap = argparse.ArgumentParser(description="Apply axon counter models to a folder of images")
