@@ -1,6 +1,8 @@
 """
 Apply both myelinated and unmyelinated finetuned models to a given folder of 
 images.
+
+Author: Armand Collin
 """
 
 from cellpose import models, io

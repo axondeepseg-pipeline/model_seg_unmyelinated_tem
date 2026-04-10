@@ -1,4 +1,5 @@
-'''This file provides utilities to preprocess the dataset into a format suitable 
+'''
+This file provides utilities to preprocess the dataset into a format suitable 
 for Cellpose training and inference.
 
 Author: Armand Collin
