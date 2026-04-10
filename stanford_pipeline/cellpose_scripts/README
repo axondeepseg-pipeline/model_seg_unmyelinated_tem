@@ -27,7 +27,21 @@ axons.
 
 ## Finetune cellpose-SAM
 Then, you can finetune the models. Usage: `finetune.py [-h] data_dir test_dir output_dir`.
-For example, you could finetune cellpose-SAM to detect unmyelinated axons:
+For example, to finetune both myelinated and unmyelinated models, use:
 ```
-python finetune.py preprocessed/train/unmyelinated preprocessed/test/unmyelinated finetuned_unmyelinated
+python finetune.py preprocessed/train/unmyelinated preprocessed/test/unmyelinated .
+python finetune.py preprocessed/train/myelinated preprocessed/test/myelinated .
+```
+
+This will create a `models` folder in the current working directory.
+
+## Apply models
+```
+python apply_models.py -m models -i <DIRECTORY_WITH_IMAGES_TO_ANALYZE>
+```
+This will apply both models to all images in the given directory (will look for images with **_TEM** suffix.)
+
+## Count axons
+```
+python count_cellpose_output.py -i <DIRECTORY_WITH_PREDICTIONS>
 ```
