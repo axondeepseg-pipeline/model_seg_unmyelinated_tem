@@ -1,0 +1,10 @@
+name: ads-cellpose
+channels:
+  - defaults
+dependencies:
+  - pip
+  - pip:
+    - cellpose>4.0.0
+    - scikit-image
+    - matplotlib
+    - pandas

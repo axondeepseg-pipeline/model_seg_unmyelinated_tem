@@ -1,0 +1,47 @@
+# cellpose pipeline
+
+First, you can setup a dedicated conda environment. Inside the current directory, 
+use:
+```
+conda env create -f environment.yml
+conda activate ads-cellpose
+```
+
+## Data
+The data we use for finetuning is the Stanford SRF dataset, available here: 
+https://doi.org/10.48324/dandi.001350/0.250511.1527
+
+The SRF testing set is available on github: https://github.com/axondeepseg/data_axondeepseg_srf_testing/archive/refs/tags/r20250513-neurips2025.zip
+
+## Preprocess the data
+The data is originally in BIDS format. Using the following script, we can 
+preprocess the data by organizing it in a convenient format for the cellpose pipeline.
+You should preprocess both the training and testing sets, like so:
+```
+python prepare_data <SRF_TRAIN_SET> -o preprocessed/train
+python prepare_data <SRF_TEST_SET> -o preprocessed/test
+```
+By default, this will create 4 sets of image-mask pairs: for both the training 
+and testing sets, there will be separate sets for myelinated and unmyelinated 
+axons.
+
+## Finetune cellpose-SAM
+Then, you can finetune the models. Usage: `finetune.py [-h] data_dir test_dir output_dir`.
+For example, to finetune both myelinated and unmyelinated models, use:
+```
+python finetune.py preprocessed/train/unmyelinated preprocessed/test/unmyelinated .
+python finetune.py preprocessed/train/myelinated preprocessed/test/myelinated .
+```
+
+This will create a `models` folder in the current working directory.
+
+## Apply models
+```
+python apply_models.py -m models -i <DIRECTORY_WITH_IMAGES_TO_ANALYZE>
+```
+This will apply both models to all images in the given directory (will look for images with **_TEM** suffix.)
+
+## Count axons
+```
+python count_cellpose_output.py -i <DIRECTORY_WITH_PREDICTIONS>
+```
