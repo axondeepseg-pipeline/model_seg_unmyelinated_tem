@@ -92,15 +92,4 @@ your_dataset/
         └── image1_seg-cellpose.png    ← segmentation result
 ```
 
-Each output mask is a grayscale image where each detected axon is assigned a unique integer value (1, 2, 3, …). Background pixels are 0. This format is compatible with ImageJ/Fiji and AxonDeepSeg.
-
----
-
-## Troubleshooting
-
-| Problem | Solution |
-|---------|----------|
-| `No module named cellpose` | Run `pip install cellpose` |
-| `CUDA out of memory` | Your GPU memory is insufficient — add `gpu=False` in the script to use CPU instead (slower) |
-| No output files created | Check that your images are `.png` and that the `micr/` subfolder exists |
-| Model file not found | Verify the path to `cpsam_uaxon` in the script |
+Each output mask is a grayscale image where each detected axon is assigned a unique integer value (1, 2, 3, …). Background pixels are 0.
