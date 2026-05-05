@@ -2,7 +2,19 @@
 Model for unmyelinated axon segmentation in TEM images, based on nnUNetv2.
 
 ## Model overview
-The images used were in BIDS format
+The dataset we used contained files in BIDS format. Images were preprocessed to match nnUNetv2's input format requirements, by combining segmentation classes into a single 5-class label map. The classes are : (unmyelinated + myelinated) axon, myelin, nuclei and process.
+
+## Installation
+
+Clone the github repo in your working directory : 
+```
+git clone https://github.com/axondeepseg-pipeline/model_seg_unmyelinated_tem.git cd model_seg_unmyelinated_tem
+```
+
+Then create the dedicated environment :
+```
+conda env create -f environment.yml
+```
 
 ## Usage
 To use the checkpoints provided in this repository, please see this temporary solution: https://github.com/axondeepseg/nn-axondeepseg. 
