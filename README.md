@@ -2,7 +2,6 @@
 Model for unmyelinated axon segmentation in TEM images, based on nnUNetv2.
 
 ## Model overview
-The dataset we used contained files in BIDS format. Images were preprocessed to match nnUNetv2's input format requirements, by combining segmentation classes into a single 5-class label map. The classes are : (unmyelinated + myelinated) axon, myelin, nuclei and process.
 
 ## Installation
 
@@ -22,7 +21,7 @@ To use the checkpoints provided in this repository, please see this temporary so
 ## Data
 The datasets can be found in the NeuroPoly internal data server. Look for `datasets/data_axondeepseg_sickkids` and `data_axondeepseg_stanford`.
 
-**TODO** show how to use script to preprocess data
+The dataset we used contained files in BIDS format. Images were preprocessed using ```convert_bids_to_nnunetv2_format.py``` to match nnUNetv2's input format requirements, by combining segmentation classes into a single 5-class label map. The classes are : (unmyelinated + myelinated) axon, myelin, nuclei and process.
 
 
 ## Training
