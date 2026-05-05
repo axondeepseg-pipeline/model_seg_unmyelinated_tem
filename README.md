@@ -2,7 +2,7 @@
 Model for unmyelinated axon segmentation in TEM images, based on nnUNetv2.
 
 ## Model overview
-**TODO** image and description
+The images used were in BIDS format
 
 ## Usage
 To use the checkpoints provided in this repository, please see this temporary solution: https://github.com/axondeepseg/nn-axondeepseg. 
@@ -18,4 +18,4 @@ For more detailed information on the training pipelines, see the `sickkids_pipel
 
 # Using the Cellpose model for unmyelinated axon segmentation
 
-This model automatically detects and outlines **unmyelinated axons** in TEM (transmission electron microscopy) images. It is based on [Cellpose](https://cellpose.readthedocs.io/en/latest/) and was fine-tuned on manually annotated TEM data from the Stanford dataset. To install Cellpose, refer to Cellpose's [github](https://github.com/MouseLand/cellpose) and [documentation] (https://cellpose.readthedocs.io/en/latest/installation.html). 
+We also compared our model's results with with [Cellpose](https://cellpose.readthedocs.io/en/latest/), and fine-tuned Cellpose's 'cpsam' model on manually annotated data from the SRF dataset. To install Cellpose, refer to Cellpose's [github](https://github.com/MouseLand/cellpose) and [documentation] (https://cellpose.readthedocs.io/en/latest/installation.html). 
