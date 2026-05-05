@@ -3,7 +3,7 @@ Model for unmyelinated axon segmentation in TEM images, based on nnUNetv2.
 
 ## Model overview
 
-We built on the model developed by Naga Karthik and Jan Valosek : ```https://github.com/ivadomed/utilities/blob/main/scripts/run_nnunet.sh```
+We built on the model developed by Naga Karthik and Jan Valosek : ```https://github.com/ivadomed/utilities/blob/main/training_scripts/run_nnunet.sh```
 
 ## Installation
 
