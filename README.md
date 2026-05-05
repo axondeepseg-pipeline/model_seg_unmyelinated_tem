@@ -19,5 +19,3 @@ For more detailed information on the training pipelines, see the `sickkids_pipel
 # Using the Cellpose model for unmyelinated axon segmentation
 
 This model automatically detects and outlines **unmyelinated axons** in TEM (transmission electron microscopy) images. It is based on [Cellpose](https://cellpose.readthedocs.io/en/latest/) and was fine-tuned on manually annotated TEM data from the Stanford dataset. To install Cellpose, refer to Cellpose's [github](https://github.com/MouseLand/cellpose) and [documentation] (https://cellpose.readthedocs.io/en/latest/installation.html). 
-
-We used Cellpose's cpsam model, and trained it on previously obtained masks. These had to be preprocessed to match Cellpose's input format requirements, using cellpose_scripts > prepare_data.py.
