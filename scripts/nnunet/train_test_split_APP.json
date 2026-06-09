@@ -1,0 +1,33 @@
+{
+    "train": {
+        "sub-84": [
+            "sample-0007"
+        ],
+        "sub-92": [
+            "sample-0008"
+        ],
+        "sub-98": [
+            "sample-0005"
+        ],
+        "sub-104": [
+            "sample-0002",
+            "sample-0005"
+        ],
+        "sub-118": [
+            "sample-0005"
+        ]
+    },
+    "test": {
+        "sub-78": [
+            "sample-0001",
+            "sample-0002",
+            "sample-0003",
+            "sample-0004"
+        ],
+        "sub-104": [
+            "sample-0001",
+            "sample-0003",
+            "sample-0004"
+        ]
+    }
+}
