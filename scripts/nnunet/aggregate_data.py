@@ -239,7 +239,10 @@ def main():
     dataset_json = {
         "name": args.name,
         "description": args.description,
-        "labels": {"background": 0, "myelin": 1, "axon": 2},
+        "labels": {
+            "background": 0, "uaxon": 1, "myelin": 2,
+            "axon": 3, "nuclei": 4, "process": 5,
+        },
         "channel_names": {"0": "rescale_to_0_1"},
         "numTraining": fname_mapping["numTraining"],
         "numTest": fname_mapping["numTest"],
