@@ -1,17 +1,21 @@
-# model_seg_unmyelinated_tem
-Model for unmyelinated axon segmentation in TEM images, based on nnUNetv2.
+# Segment all axons in EM images
 
-## Model overview
-**TODO** image and description
+![seg-animation](assets/unmyelinated-model.gif)
+
+Model for axon segmentation in TEM images. Both myelinated and unmyelinated axons are processed, allowing users to compute the percentage of myelinated axons without manual counting.
+
+## Repo overview
+Two model architectures were considered for this project:
+- `scripts/nnunet/` contains the material to train a nnUNetv2 model (package version 2.2.1).
+- `scripts/cellpose` contains scripts to train and evaluate a Cellpose4 model (cellpose-SAM).
+
+Model weights are available as release assets.
 
 ## Usage
-To use the checkpoints provided in this repository, please see this temporary solution: https://github.com/axondeepseg/nn-axondeepseg. 
+The nnunet models can be downloaded and used in the [AxonDeepSeg](https://github.com/axondeepseg/axondeepseg) software. Use the following AxonDeepSeg command to download the model locally:
+```
+download_model -m unmyelinated-TEM
+```
 
 ## Data
-The datasets can be found in the NeuroPoly internal data server. Look for `datasets/data_axondeepseg_sickkids` and `data_axondeepseg_stanford`.
-
-**TODO** show how to use script to preprocess data
-
-
-## Training
-For more detailed information on the training pipelines, see the `sickkids_pipeline` and `stanford_pipeline` folders.
+The main dataset used in this study is available for download here: https://doi.org/10.48324/dandi.001350/0.250511.1527
