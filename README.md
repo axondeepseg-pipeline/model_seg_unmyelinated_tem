@@ -1,13 +1,13 @@
 # Segment all axons in EM images
 
-![seg-animation](assets/unmyelinated-model.gif)
+<img src=assets/unmyelinated-model.gif height=500 >
 
 Model for axon segmentation in TEM images. Both myelinated and unmyelinated axons are processed, allowing users to compute the percentage of myelinated axons without manual counting.
 
 ## Repo overview
 Two model architectures were considered for this project:
 - `scripts/nnunet/` contains the material to train a nnUNetv2 model (package version 2.2.1).
-- `scripts/cellpose` contains scripts to train and evaluate a Cellpose4 model (cellpose-SAM).
+- `scripts/cellpose/` contains scripts to train and evaluate a Cellpose4 model (cellpose-SAM).
 
 Model weights are available as release assets.
 
