@@ -68,8 +68,8 @@ def main():
     )
     parser.add_argument(
         "--description",
-        default="Combined multi-resolution datasets for myelinated and unmyelinated axon segmentation",
-        help="Description of the aggregated dataset. Default: 'Combined multi-resolution datasets for myelinated and unmyelinated axon segmentation'",
+        default="Combined multi-resolution datasets for myelinated and unmyelinated axon segmentation. Contains multiple resized versions of the original images.",
+        help="Description of the aggregated dataset. Default: 'Combined multi-resolution datasets for myelinated and unmyelinated axon segmentation. Contains multiple resized versions of the original images.'",
     )
     args = parser.parse_args()
 
@@ -102,6 +102,16 @@ def main():
             resize_and_save_image(gt_path, Path(new_gt_fname), factor, is_gt=True)
 
             current_id += 1
+
+    # update the dataset.json file with the new description
+    dataset_json_path = new_dataset_dir / "dataset.json"
+    with open(dataset_json_path, "r") as f:
+        dataset_json = f.read()
+    dataset_json = re.sub(r'"description": ".*?"', f'"description": "{args.description}"', dataset_json)
+    updated_training_image_count = len(list((new_dataset_dir / "imagesTr").glob("*.png")))
+    dataset_json = re.sub(r'"numTraining": \d+', f'"numTraining": {updated_training_image_count}', dataset_json)
+    with open(dataset_json_path, "w") as f:
+        f.write(dataset_json)
 
 if __name__ == "__main__":
     main()
