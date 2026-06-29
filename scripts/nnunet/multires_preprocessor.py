@@ -8,6 +8,7 @@ aim of regularizing the model output across resolutions.
 import argparse
 import shutil
 from pathlib import Path
+import re
 
 RESIZE_FACTORS = [0.5, 2.0, 4.0]
 
@@ -19,6 +20,12 @@ def get_associated_gt(image_path: Path) -> Path:
     gt_path = image_path.parent.parent / "labelsTr" / image_path.name.replace("_0000.png", ".png")
     assert gt_path.exists(), f"Ground truth for {image_path} does not exist."
     return gt_path
+
+def get_case_id_from_path(image_path: Path) -> int:
+    """
+    Given the path to an image, return the case ID (the part of the filename before the last underscore).
+    """
+    return int("_".join(image_path.stem.split("_")[:-1]))
 
 def main():
     """
@@ -66,19 +73,17 @@ def main():
 
     # iterate over all images
     training_images = list((new_dataset_dir / "imagesTr").glob("*.png"))
-    current_id = 1 + max([int(img.stem.split("_")[-1]) for img in training_images])
+    current_id = 1 + max([get_case_id_from_path(img) for img in training_images])
     for image_path in training_images:
-        gt = get_associated_gt(image_path)
+        gt_path = get_associated_gt(image_path)
+        print(f"Processing case ID {get_case_id_from_path(image_path)} and adding {len(RESIZE_FACTORS)} resized versions.")
         for factor in RESIZE_FACTORS:
-            # create a new image name with the resize factor
-            new_image_name = f"{image_path.stem}_resized_{factor:.1f}.png"
-            new_image_path = image_path.parent / new_image_name
-            new_gt_name = f"{gt.stem}_resized_{factor:.1f}.png"
-            new_gt_path = gt.parent / new_gt_name
-
+            # find the new image and ground truth paths
+            new_gt_fname = Path(re.sub(r"\d\d\d\.png$", f"{current_id:03d}.png", str(gt_path)))
+            new_image_fname = str(new_gt_fname).replace(".png", "_0000.png")
             # resize the image and ground truth
-            resize_image(image_path, new_image_path, factor)
-            resize_image(gt, new_gt_path, factor)
+            # resize_and_save_image(image_path, new_image_path, factor)
+            # resize_and_save_image(gt_path, new_gt_path, factor)
 
             current_id += 1
 
