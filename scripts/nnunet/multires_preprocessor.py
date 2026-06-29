@@ -32,7 +32,11 @@ def resize_and_save_image(image_path: Path, new_image_path: Path, factor: float,
     """
     Resize the image at image_path by the given factor and save it to new_image_path.
     """
-    interpolation = cv2.INTER_NEAREST if is_gt else cv2.INTER_BILINEAR
+    interpolation = cv2.INTER_NEAREST if is_gt else cv2.INTER_CUBIC
+    if is_gt:
+        interpolation = cv2.INTER_NEAREST
+    else:
+        interpolation = cv2.INTER_CUBIC if factor >= 1.0 else cv2.INTER_AREA
     image = cv2.imread(str(image_path), cv2.IMREAD_GRAYSCALE)
     new_size = (int(image.shape[1] * factor), int(image.shape[0] * factor))
     resized_image = cv2.resize(image, new_size, interpolation=interpolation)
@@ -91,11 +95,11 @@ def main():
         for factor in RESIZE_FACTORS:
             # find the new image and ground truth paths
             new_gt_fname = Path(re.sub(r"\d\d\d\.png$", f"{current_id:03d}.png", str(gt_path)))
-            new_image_fname = str(new_gt_fname).replace(".png", "_0000.png")
+            new_image_fname = str(new_gt_fname).replace(".png", "_0000.png").replace("labelsTr", "imagesTr")
             print(f"\tat {factor}x - {new_image_fname}")
             # resize the image and ground truth
-            resize_and_save_image(image_path, new_image_path, factor, is_gt=False)
-            resize_and_save_image(gt_path, new_gt_path, factor, is_gt=True)
+            resize_and_save_image(image_path, Path(new_image_fname), factor, is_gt=False)
+            resize_and_save_image(gt_path, Path(new_gt_fname), factor, is_gt=True)
 
             current_id += 1
 
