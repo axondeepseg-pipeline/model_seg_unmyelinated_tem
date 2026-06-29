@@ -9,6 +9,7 @@ import argparse
 import shutil
 from pathlib import Path
 import re
+import cv2
 
 RESIZE_FACTORS = [0.5, 2.0, 4.0]
 
@@ -26,6 +27,16 @@ def get_case_id_from_path(image_path: Path) -> int:
     Given the path to an image, return the case ID (the part of the filename before the last underscore).
     """
     return int(image_path.stem.split("_")[-2])
+
+def resize_and_save_image(image_path: Path, new_image_path: Path, factor: float, is_gt: bool = False):
+    """
+    Resize the image at image_path by the given factor and save it to new_image_path.
+    """
+    interpolation = cv2.INTER_NEAREST if is_gt else cv2.INTER_BILINEAR
+    image = cv2.imread(str(image_path), cv2.IMREAD_GRAYSCALE)
+    new_size = (int(image.shape[1] * factor), int(image.shape[0] * factor))
+    resized_image = cv2.resize(image, new_size, interpolation=interpolation)
+    cv2.imwrite(str(new_image_path), resized_image)
 
 def main():
     """
@@ -83,8 +94,8 @@ def main():
             new_image_fname = str(new_gt_fname).replace(".png", "_0000.png")
             print(f"\tat {factor}x - {new_image_fname}")
             # resize the image and ground truth
-            # resize_and_save_image(image_path, new_image_path, factor)
-            # resize_and_save_image(gt_path, new_gt_path, factor)
+            resize_and_save_image(image_path, new_image_path, factor, is_gt=False)
+            resize_and_save_image(gt_path, new_gt_path, factor, is_gt=True)
 
             current_id += 1
 
