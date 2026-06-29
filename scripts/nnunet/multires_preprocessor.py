@@ -66,12 +66,21 @@ def main():
 
     # iterate over all images
     training_images = list((new_dataset_dir / "imagesTr").glob("*.png"))
-    current_id = max([int(img.stem.split("_")[3]) for img in training_images])
+    current_id = 1 + max([int(img.stem.split("_")[-1]) for img in training_images])
     for image_path in training_images:
         gt = get_associated_gt(image_path)
-        print(f"Current case ID is {current_id}.")
-        current_id += 1
+        for factor in RESIZE_FACTORS:
+            # create a new image name with the resize factor
+            new_image_name = f"{image_path.stem}_resized_{factor:.1f}.png"
+            new_image_path = image_path.parent / new_image_name
+            new_gt_name = f"{gt.stem}_resized_{factor:.1f}.png"
+            new_gt_path = gt.parent / new_gt_name
 
+            # resize the image and ground truth
+            resize_image(image_path, new_image_path, factor)
+            resize_image(gt, new_gt_path, factor)
+
+            current_id += 1
 
 if __name__ == "__main__":
     main()
