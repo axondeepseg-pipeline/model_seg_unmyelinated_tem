@@ -25,7 +25,7 @@ def get_case_id_from_path(image_path: Path) -> int:
     """
     Given the path to an image, return the case ID (the part of the filename before the last underscore).
     """
-    return int("_".join(image_path.stem.split("_")[:-1]))
+    return int(image_path.stem.split("_")[-2])
 
 def main():
     """
@@ -81,6 +81,7 @@ def main():
             # find the new image and ground truth paths
             new_gt_fname = Path(re.sub(r"\d\d\d\.png$", f"{current_id:03d}.png", str(gt_path)))
             new_image_fname = str(new_gt_fname).replace(".png", "_0000.png")
+            print(f"\tat {factor}x - {new_image_fname}")
             # resize the image and ground truth
             # resize_and_save_image(image_path, new_image_path, factor)
             # resize_and_save_image(gt_path, new_gt_path, factor)
