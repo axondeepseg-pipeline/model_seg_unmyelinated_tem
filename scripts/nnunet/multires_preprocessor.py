@@ -107,6 +107,7 @@ def main():
     dataset_json_path = new_dataset_dir / "dataset.json"
     with open(dataset_json_path, "r") as f:
         dataset_json = f.read()
+    dataset_json = re.sub(r'"name": ".*?"', f'"name": "{args.name}"', dataset_json)
     dataset_json = re.sub(r'"description": ".*?"', f'"description": "{args.description}"', dataset_json)
     updated_training_image_count = len(list((new_dataset_dir / "imagesTr").glob("*.png")))
     dataset_json = re.sub(r'"numTraining": \d+', f'"numTraining": {updated_training_image_count}', dataset_json)
