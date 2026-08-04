@@ -1,8 +1,14 @@
 # Segment all axons in EM images
+Model for axon segmentation in TEM images. Both myelinated and unmyelinated axons are processed, allowing users to compute the percentage of myelinated axons without manual counting.
 
 <img src=assets/unmyelinated-model.gif height=500 >
 
-Model for axon segmentation in TEM images. Both myelinated and unmyelinated axons are processed, allowing users to compute the percentage of myelinated axons without manual counting.
+
+## Usage
+The nnunet models can be downloaded and used in the [AxonDeepSeg](https://github.com/axondeepseg/axondeepseg) software. Use the following AxonDeepSeg command to download the model locally:
+```
+download_model -m unmyelinated-TEM
+```
 
 ## Repo overview
 Two model architectures were considered for this project:
@@ -10,12 +16,6 @@ Two model architectures were considered for this project:
 - `scripts/cellpose/` contains scripts to train and evaluate a Cellpose4 model (cellpose-SAM).
 
 Model weights are available as release assets.
-
-## Usage
-The nnunet models can be downloaded and used in the [AxonDeepSeg](https://github.com/axondeepseg/axondeepseg) software. Use the following AxonDeepSeg command to download the model locally:
-```
-download_model -m unmyelinated-TEM
-```
 
 ## Data
 The main dataset used in this study is available for download here: https://doi.org/10.48324/dandi.001350/0.250511.1527
